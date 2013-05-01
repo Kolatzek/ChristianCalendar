@@ -15,4 +15,4 @@ class UnknownSolemnityException(Exception):
         self.solemnity = solemnity
         self.tradition = tradition
     def __str__(self):
-        return 'The solemnity '+self.solemnity+' is unknown in '+self.tradition+' tradition.'
+        return 'The solemnity '+self.solemnity+' is unknown in '+self.tradition+' tradition'

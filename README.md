@@ -14,3 +14,5 @@ A module to check christian hollydays or get a date of it in same year as given 
 Requires module pascha from PIP. Install it with 
     
     easy_install pascha
+
+If a solemnity is unknown in a tradition, you will get the UnknownSolemnityException.

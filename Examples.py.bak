@@ -11,8 +11,7 @@ print c.get_ashWednesday()
 
 c=cc.CCalendar(date(2013,03,31), cc.CCalendar.__WESTERN__)
 print c.get_corpusChristi()
-print c.get_trinitySunday()
-print c.is_ashWednesday()
+
 
 c=cc.CCalendar(date(2013,03,31), cc.CCalendar.__EASTERN__)
 try:
