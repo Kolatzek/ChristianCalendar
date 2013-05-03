@@ -2,7 +2,7 @@ from datetime import date,datetime,timedelta
 from pascha import traditions,computus
 from Exceptions import *
 
-class CCalendar():
+class CCalendar:
     """
     Put a date to check and call is_xxx functions to receive a boolean 
     or call get_xxxDay to get the date of this day for the year of the given date.
@@ -15,7 +15,7 @@ class CCalendar():
         mydate - a date of type datatime.date to check
         tradition - a string "western" or "eastern" to check it for catholic or orthodox church
         """
-        if type(mydate) != type(date(2013,04,28)):
+        if type(mydate) != type(date.today()):
             raise BadArgumentException(mydate)
         self.date = mydate
         self.offsets = {}
@@ -27,12 +27,12 @@ class CCalendar():
             self.offsets = traditions.Eastern().offset
         else:
             raise BadTraditionException(tradition)
-        year = self.date.year
+        self.year = self.date.year
         self.easter_date = 0
         if self.tradition == self.__WESTERN__:
-            self.easter_date=computus.western(year)
+            self.easter_date=computus.western(object,  self.year)
         elif self.tradition == self.__EASTERN__:
-            self.easter_date=computus.eastern(year)
+            self.easter_date=computus.eastern(object,  self.year)
         self.easter_date = date(self.easter_date.year, self.easter_date.month, self.easter_date.day)
     
     def is_easterDay(self):
@@ -128,5 +128,29 @@ class CCalendar():
             raise UnknownSolemnityException('Corpus Christi', self.tradition)
         return self.easter_date+self.offsets['Corpus Christi']
 
+import re
+
+class MagicCCalendar:
+    def __init__(self,  mydate = '', tradition = CCalendar.__WESTERN__):
+        if type(mydate) == type(date.today()):
+            self.date = mydate
+        else:
+            self.date = date.today()
+        if tradition in (CCalendar.__WESTERN__,  CCalendar.__EASTERN__):
+            self.tradition = tradition
+            if self.tradition == CCalendar.__WESTERN__:
+                self.traditionObj = traditions.Western()
+            if self.tradition == CCalendar.__EASTERN__:
+                self.traditionObj = traditions.Eastern()
+        else:
+            raise BadTraditionException(tradition)
+        self.eastern = CCalendar(self.date,  self.tradition).get_easterDay()
+        
+    def __getattr__(self, name):
+        varname = re.sub(r'([A-Z1-9])', ' \g<1>', name)[1:].replace(' Of ',  ' of ').replace(' The ',  ' the ').replace(' And ',  ' and ')
+        if varname in self.traditionObj.offset:
+            return self.eastern+self.traditionObj.offset[varname]
+        else:
+            raise UnknownSolemnityException(varname, self.tradition)
         
 
