@@ -1,3 +1,14 @@
+#!/usr/bin/env python
+
+###############################
+## Author Robert Kolatzek
+## Exceptions.py license: 
+## MIT The MIT License (MIT)
+## http://opensource.org/licenses/mit-license.php
+###############################
+
+# vim: tabstop=4 expandtab shiftwidth=4
+
 from datetime import date
 
 #### Test for standard usage with is_ and get_ ####

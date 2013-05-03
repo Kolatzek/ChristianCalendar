@@ -1,3 +1,15 @@
+#!/usr/bin/env python
+
+###############################
+## Author Robert Kolatzek
+## Exceptions.py license: 
+## MIT The MIT License (MIT)
+## http://opensource.org/licenses/mit-license.php
+###############################
+
+# vim: tabstop=4 expandtab shiftwidth=4
+
+
 from datetime import date,datetime,timedelta
 from pascha import traditions,computus
 from Exceptions import *
@@ -131,7 +143,18 @@ class CCalendar:
 import re
 
 class MagicCCalendar:
+    """
+    This class use the magic __getattr__ function to catch all calls on a object.
+    An object attribute is a CamelCased name of a solemnity like: MagicCCalendar(date(2010, 4, 11)).TheOctaveOfEaster
+    If this solemnity is unknown (in this tradition) or written not in the right way, a UnknownSolemnityException will be raised.
+    Solemnity names comes from pascha package ("offset" dictionary in traditions.Western or traditions.Eastern).
+    """
     def __init__(self,  mydate = '', tradition = CCalendar.__WESTERN__):
+        """
+        Optional parameters:
+        mydate - a datetime.date object with date (which year to use)
+        tradition - can be CCalendar.__WESTERN__ (default) or CCalendar.__EASTERN__
+        """
         if type(mydate) == type(date.today()):
             self.date = mydate
         else:
@@ -147,6 +170,9 @@ class MagicCCalendar:
         self.eastern = CCalendar(self.date,  self.tradition).get_easterDay()
         
     def __getattr__(self, name):
+        """
+        Catch the CamelCasedAttributeName and convert it. Then look for a delta in traditions offset. Return a datetime.date object or raise UnknownSolemnityException.
+        """
         varname = re.sub(r'([A-Z1-9])', ' \g<1>', name)[1:].replace(' Of ',  ' of ').replace(' The ',  ' the ').replace(' And ',  ' and ')
         if varname in self.traditionObj.offset:
             return self.eastern+self.traditionObj.offset[varname]

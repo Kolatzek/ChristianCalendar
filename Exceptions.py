@@ -1,3 +1,14 @@
+#!/usr/bin/env python
+
+###############################
+## Author Robert Kolatzek
+## Exceptions.py license: 
+## The MIT License (MIT)
+## http://opensource.org/licenses/mit-license.php
+###############################
+
+# vim: tabstop=4 expandtab shiftwidth=4
+
 class BadTraditionException(Exception):
     def __init__(self,value):
         self.value = value
